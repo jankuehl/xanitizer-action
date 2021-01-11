@@ -8422,21 +8422,29 @@ class AbstractCmdForProject extends abstract_cmd_1.AbstractCmd {
         super(installDir);
         this.githubCheckoutPath = githubCheckoutPath;
         this.githubProjectName = githubProjectName;
+        core.info("configFileDir1: " + core.getInput(headless_parameters_1.HeadlessParameters.CONFIG_FILE_DIRECTORY, { required: false }) + " X");
         this.configFile = core.getInput(headless_parameters_1.HeadlessParameters.CONFIG_FILE, { required: false });
         this.projectDataDirectory = core.getInput(headless_parameters_1.HeadlessParameters.PROJECT_DATA_DIRECTORY, { required: false });
         this.projectName = core.getInput(headless_parameters_1.HeadlessParameters.PROJECT_NAME, { required: false });
         this.configFileDirectory = core.getInput(headless_parameters_1.HeadlessParameters.CONFIG_FILE_DIRECTORY, { required: false });
-        this.overwriteConfigFile = this.getBooleanParameter(core.getInput(headless_parameters_1.HeadlessParameters.OVERWRITE_CONFIG_FILE, { required: false }), true);
+        core.info("configFileDir2: " + this.configFileDirectory + " X");
+        let hasNoConfigFile = this.configFile == null || this.configFile.length === 0;
+        core.info("configFileDir3: " + hasNoConfigFile + " X");
+        this.overwriteConfigFile = this.getBooleanParameter(core.getInput(headless_parameters_1.HeadlessParameters.OVERWRITE_CONFIG_FILE, { required: false }), hasNoConfigFile);
         this.rootDirectory = core.getInput(headless_parameters_1.HeadlessParameters.ROOT_DIRECTORY, { required: false });
+        core.info("rootDir1: " + core.getInput(headless_parameters_1.HeadlessParameters.ROOT_DIRECTORY, { required: false }) + " X");
+        core.info("rootDir2: " + this.rootDirectory + " X");
         // No configuration file and no root directory set => use checkout path as root directory.
-        if ((this.configFile == null || this.configFile.length === 0)
-            && (this.rootDirectory == null || this.rootDirectory.length === 0)) {
+        if (hasNoConfigFile && (this.rootDirectory == null || this.rootDirectory.length === 0)) {
             this.rootDirectory = this.githubCheckoutPath;
+            core.info("rootDir3: " + this.rootDirectory + " X");
         }
         // Patch root directory dependent attributes if neccessary.
         if (this.rootDirectory != null && this.rootDirectory.length > 0) {
+            core.info("rootDir4: " + this.rootDirectory + " X");
             if (this.configFileDirectory == null || this.configFileDirectory.length === 0) {
                 this.configFileDirectory = this.githubCheckoutPath;
+                core.info("configFileDirectory1: " + this.configFileDirectory + " X");
             }
         }
     }
